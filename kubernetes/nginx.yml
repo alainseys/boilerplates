@@ -48,6 +48,10 @@ spec:
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf  # Fixes read-only ConfigMap issue
 
+            - name: ssl-certs
+              mountPath: /etc/nginx/ssl
+              read-only: true
+
 
         - name: php-fpm
           image: php:8.2-fpm
