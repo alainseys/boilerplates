@@ -13,11 +13,10 @@ spec:
     - name: http
       port: 80
       targetPort: 80
-    - name: kube
-      port: 8443
-      targetPort: 8443
+    - name: https
+      port: 443
+      targetPort: 443
   type: LoadBalancer
----
 
 ---
 # NGINX BASE
@@ -108,7 +107,7 @@ spec:
   capacity:
     storage: 5Gi
   storageClassName: ""
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Retain
   nfs:
     server: 172.27.235.105
     path: /srv/nfs/kubedata
