@@ -17,6 +17,31 @@ spec:
       port: 443
       targetPort: 443
   type: LoadBalancer
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-php-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - "*.vanmarcke.be"  # Replace with your domain
+    secretName: wildcard-cert-secret
+  rules:
+  - host: "vanmarcke.be"  # Replace with your actual domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-php
+            port:
+              number: 80
+
 
 ---
 # NGINX BASE
@@ -46,11 +71,10 @@ spec:
 
             - name: nginx-config
               mountPath: /etc/nginx/conf.d/default.conf
-              subPath: default.conf  # Fixes read-only ConfigMap issue
+              subPath: default.conf 
 
             - name: ssl-certs
               mountPath: /etc/nginx/ssl
-              read-only: true
 
 
         - name: php-fpm
@@ -83,6 +107,31 @@ data:
     server {
         listen 80;
         server_name localhost;
+
+        root /usr/share/nginx/html;
+        index index.php index.html index.htm;
+
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+            include fastcgi_params;
+            fastcgi_pass 127.0.0.1:9000;  # Use localhost since PHP-FPM is in the same pod
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+
+        # Redirect HTTP to HTTPS
+        error_page 497 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name localhost;
+
+        ssl_certificate /etc/nginx/ssl/tls.crt;
+        ssl_certificate_key /etc/nginx/ssl/tls.key;
 
         root /usr/share/nginx/html;
         index index.php index.html index.htm;
