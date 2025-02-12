@@ -68,6 +68,10 @@ spec:
           configMap:
             name: nginx-config
 
+        - name: ssl-certs
+          secret:
+            secretName: wildcard-cert-secret
+
 ---
 # NGINX CONFIG
 apiVersion: v1
