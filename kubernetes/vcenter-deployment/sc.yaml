@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: vsphere-sc
+provisioner: csi.vsphere.vmware.com
+parameters:
+  datastore: "K3S-LUN-01"  # Replace with your vCenter datastore name
+  fstype: "ext4"                     # Filesystem type
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
