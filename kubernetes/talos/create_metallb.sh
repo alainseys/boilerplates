@@ -22,6 +22,8 @@ data:
 EOL
 
     echo "Configuration file '$filename' created with range: $ip_address_range"
+    kubectl create -f $filename
+    kubectl get namespace  | grep metallb-system 
 }
 
 # Main script execution
