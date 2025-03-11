@@ -1,4 +1,5 @@
 #!/bin/bash
+# PURPOSE: Ask the user for the range that needs to be used within the cluster and apply
 
 # Function to create the configuration file
 create_ip_file() {
