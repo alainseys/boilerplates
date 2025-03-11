@@ -13,7 +13,8 @@ export GOVC_DATASTORE='datastore'
 export GOVC_NETWORK='kubernetes'
 export GOVC_DATACENTER='datacentername'
 
-
+# Modification to ask for the datacenter name
+read -p "Enter the cluster name (default: nginx-test): " CLUSTER_NAME
 CLUSTER_NAME=${CLUSTER_NAME:=nginx-test}
 TALOS_VERSION=${TALOS_VERSION:=v1.7.7}
 OVA_PATH=${OVA_PATH:="https://github.com/siderolabs/talos/releases/download/${TALOS_VERSION}/vmware-amd64.ova"}
