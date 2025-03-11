@@ -67,25 +67,19 @@ I recomend you configure and install this on a jump host where you perform all y
      ```  
    - If it exists, delete it.
 
-2. **Create Metallb Namespace**  
+2. **Create Metallb Namespace & install**  
    - Run:  
      ```bash
-     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.5/manifests/namespace.yaml
+     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/refs/tags/v0.14.9/config/manifests/metallb-native.yaml
      ```
 
-3. **Install Metallb**  
-   - Execute:  
-     ```bash
-     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.5/manifests/metallb.yaml
-     ```
-
-4. **Verify Installation**  
+3. **Verify Installation**  
    - Check if the namespace and pods are created:  
      ```bash
      kubectl get namespaces && kubectl get pods -n metallb-system
      ```
 
-5. **Create ConfigMap**  
+4. **Create ConfigMap**  
    - Create a file named `metallb.yaml` with the following content:  
      ```yaml
      apiVersion: v1
