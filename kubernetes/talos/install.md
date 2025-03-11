@@ -1,5 +1,5 @@
 # Talos Installation Instructions
-I recomend you configure and install this on a jump host where you perform all your configurations from the ground up.
+This are the manual installation instruction i am working on some scripts to automate the process.
 
 ## Talos Installation Steps
 
