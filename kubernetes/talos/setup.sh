@@ -1,7 +1,10 @@
 #!/bin/bash
-# WORK IN PROGRESS
-# This script goes to all of the required steps and only asks the user the required info
-
+# TITLE: setup.sh
+# PROJECT: Kubernetes
+# DESCRIPTION: Automated instlalation procedure to provision vcenter vms with talos and create a kubernets cluster
+# DATE: 2025-03-11
+# VERSION: v0.0.1
+# NOTES: DO NOT USE THIS SCRIPT IN PRODUCTION NOT FULLY TESTED ON HA !!!
 # Function to execute script and check for errors
 execute_script() {
   local script="$1"
