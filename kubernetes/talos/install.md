@@ -155,3 +155,5 @@ I recomend you configure and install this on a jump host where you perform all y
      kubectl get all
      ```  
    - You should see the pod and the LoadBalancer service with the external IP populated.
+
+   When you no longer need the cluster you can tear it down by running ./vmware.sh destroy this will destroy the cluster and remove it from vcenter.
