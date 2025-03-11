@@ -41,5 +41,9 @@ else
     echo "Invalid Control Plane IP address format. Please enter a valid IPv4 address."
     exit 1
 fi
-# Step 4 > Execute create_metallb.sh
+# Step 4 > Install metallb
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/refs/tags/v0.14.9/config/manifests/metallb-native.yaml
+kubectl get namespaces && kubectl get pods -n metallb-system
+
+# Step 5 > Create config map for metallb (the script will create the LB)
 execute_script "./create_metallb.sh"
