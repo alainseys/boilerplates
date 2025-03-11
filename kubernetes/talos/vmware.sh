@@ -5,13 +5,14 @@ set -e
 ## The following commented environment variables should be set
 ## before running this script
 
-export GOVC_USERNAME='user@vsphere.local'
-export GOVC_PASSWORD='password'
+export GOVC_USERNAME='usernamehere'
+export GOVC_PASSWORD='passwordhere'
 export GOVC_INSECURE=true
-export GOVC_URL='https://vcenter.domain.com'
-export GOVC_DATASTORE='DS01'
+export GOVC_URL='https://vcenter.yourdomain.be'
+export GOVC_DATASTORE='datastore'
 export GOVC_NETWORK='kubernetes'
-export GOVC_DATACENTER='DC1'
+export GOVC_DATACENTER='datacentername'
+
 
 CLUSTER_NAME=${CLUSTER_NAME:=nginx-test}
 TALOS_VERSION=${TALOS_VERSION:=v1.7.7}
