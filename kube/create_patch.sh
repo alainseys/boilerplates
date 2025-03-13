@@ -25,6 +25,7 @@ EOL
 # Main script execution
 read -p "Please enter the IP address: " ip_address
 read -p "Please enter the Cluster Name: " cluster_name
+
 # Validate the IP address (basic validation)
 if [[ "$ip_address" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     IFS='.' read -r i1 i2 i3 i4 <<< "$ip_address"
