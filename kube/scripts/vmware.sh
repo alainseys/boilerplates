@@ -2,7 +2,9 @@
 
 set -e
 
-## The following commented environment variables should be set
+local cluster_name="$1"
+read -p "Enter the name of the cluster: " cluster_name
+## The following commented environment variables should be set./
 ## before running this script
 
 export GOVC_USERNAME='user@vsphere.local'
@@ -13,7 +15,7 @@ export GOVC_DATASTORE='DS01'
 export GOVC_NETWORK='kubernetes'
 export GOVC_DATACENTER='DC1'
 
-CLUSTER_NAME=${CLUSTER_NAME:=nginx-test}
+CLUSTER_NAME=${CLUSTER_NAME:=$cluster_name}
 TALOS_VERSION=${TALOS_VERSION:=v1.7.7}
 OVA_PATH=${OVA_PATH:="https://github.com/siderolabs/talos/releases/download/${TALOS_VERSION}/vmware-amd64.ova"}
 
