@@ -5,16 +5,16 @@ set -e
 ## The following commented environment variables should be set
 ## before running this script
 
-export GOVC_USERNAME='username@vsphere.local'
-export GOVC_PASSWORD=''
+export GOVC_USERNAME='user@vsphere.local'
+export GOVC_PASSWORD='password'
 export GOVC_INSECURE=true
-export GOVC_URL='https://server.domain.com'
-export GOVC_DATASTORE='DC01'
+export GOVC_URL='https://vcenter.domain.com'
+export GOVC_DATASTORE='DS01'
 export GOVC_NETWORK='kubernetes'
-export GOVC_DATACENTER='DATACENTER'
+export GOVC_DATACENTER='DC1'
 
 CLUSTER_NAME=${CLUSTER_NAME:=nginx-test}
-TALOS_VERSION=${TALOS_VERSION:=v1.9.5}
+TALOS_VERSION=${TALOS_VERSION:=v1.7.7}
 OVA_PATH=${OVA_PATH:="https://github.com/siderolabs/talos/releases/download/${TALOS_VERSION}/vmware-amd64.ova"}
 
 CONTROL_PLANE_COUNT=${CONTROL_PLANE_COUNT:=3}
