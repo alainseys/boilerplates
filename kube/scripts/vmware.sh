@@ -16,8 +16,8 @@ export GOVC_NETWORK='kubernetes'
 export GOVC_DATACENTER='DC1'
 
 CLUSTER_NAME=${CLUSTER_NAME:=$cluster_name}
-TALOS_VERSION=${TALOS_VERSION:=v1.7.7}
-OVA_PATH=${OVA_PATH:="https://github.com/siderolabs/talos/releases/download/${TALOS_VERSION}/vmware-amd64.ova"}
+TALOS_VERSION=${TALOS_VERSION:=v1.9.5}
+OVA_PATH=${OVA_PATH:="https://factory.talos.dev/image/903b2da78f99adef03cbbd4df6714563823f63218508800751560d3bc3557e40/${TALOS_VERSION}/vmware-amd64.ova"}
 
 CONTROL_PLANE_COUNT=${CONTROL_PLANE_COUNT:=3}
 CONTROL_PLANE_CPU=${CONTROL_PLANE_CPU:=2}
