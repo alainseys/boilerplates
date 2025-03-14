@@ -1,0 +1,24 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-php-ingress
+  namespace: webserver-01
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - "*.vanmarcke.be"  # Replace with your wildcard domain
+    secretName: wildcard-cert-secret
+  rules:
+  - host: "vanmarcke.be"  # Replace with your actual domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-php
+            port:
+              number: 80
