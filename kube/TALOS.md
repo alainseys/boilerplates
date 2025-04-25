@@ -97,7 +97,7 @@ Tech stack
     To test the application we will create a simple nginx application and expose port 80
 
     ```shell 
-    kubeclt create deploy nginx --image nginx:latest
+    kubectl create deploy nginx --image nginx:latest
 
     kubectl expose deploy nginx --port 80 --type LoadBalancer
 
