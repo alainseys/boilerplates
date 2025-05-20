@@ -1,0 +1,22 @@
+version: "3"
+services:
+  dns:
+    restart: always
+    image: strm/dnsmasq
+    volumes:
+     - ${DNS_CONF-./config/dns/dnsmasq.conf}:/etc/dnsmasq.conf
+    ports:
+      - "53:53/udp"
+    cap_add:
+      - NET_ADMIN
+    networks:
+      dnsnet:
+        ipv4_address: ${DNS_IP}
+networks:
+
+  dnsnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${DNS_RANGE}
