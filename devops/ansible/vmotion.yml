@@ -1,0 +1,41 @@
+- name: vmotion move VMs from one ESXi host to another
+  hosts: all
+  vars_files:
+    - vault.yml
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Gather the vms from source host
+      community.vmware.vmware_vm_info:
+        hostname: "{{ host_dc2_esx01 }}"
+        username: "{{ host_dc2_esx01_username }}"
+        password: "{{ host_dc2_esx01_password }}"
+        validate_certs: false
+      register: vminfo
+      delegate_to: localhost
+
+    - name: Filter VMs running on a specific ESXi host
+      ansible.builtin.set_fact:
+        vms_on_target_host: >-
+          {{ vminfo.virtual_machines
+            | selectattr('esxi_hostname', 'equalto', host_dc2_esx01)
+            | list }}
+
+    - name: Print all ESXi hostnames found
+      ansible.builtin.debug:
+        msg: "{{ item.guest_name }} runs on {{ item.esxi_hostname }}"
+      loop: "{{ vminfo.virtual_machines }}"
+
+    - name: Perform vMotion to move VMs to another host
+      community.vmware.vmware_vmotion:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        vm_name: "{{ item.guest_name }}"
+        destination_host: "{{ host_dc2_esx02 }}"
+      loop: "{{ vminfo.virtual_machines }}"
+      delegate_to: localhost
+
+
+
