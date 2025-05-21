@@ -1,0 +1,20 @@
+- name: Revert snapshot of a VM
+  hosts: all
+  vars:
+  vars_files:
+    - vault.yml
+  tasks:
+    - name: Create Snapshot
+      community.vmware.vmware_guest_snapshot:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        datacenter: "{{ vcenter_datacenter }}"
+        validate_certs: false
+        folder: "{{ vcenter_vm_folder }}"
+        name: "{{ vm_name | default(inventory_hostname) }}"
+        snapshot_name: "Daily snap of ANSIBLE-DEMO"
+        description: "Daily snap of ANSIBLE-DEMO"
+        state: revert
+        memory_dump: true
+      delegate_to: localhost
