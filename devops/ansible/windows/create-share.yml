@@ -1,0 +1,10 @@
+- name: Share folders
+  host: all
+  gather_facts: false
+  tasks:
+    - name: Create a share
+      ansible.windows.win_share:
+        name: fileshare01
+        description: "share fileshare01"
+        path: 'C:\temp\'
+        full: "ansible"
