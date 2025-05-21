@@ -1,0 +1,25 @@
+- name: Create new folders in DFS namespace
+  hosts: all
+  vars:
+    dfs_san_server: SAN-SERVER
+    dfs_domain_name: domain.com
+    dfs_namespace: storage
+    shares:
+      - share1
+      - share2
+  tasks:
+    - name: Debug - Show share_names after split
+      ansible.builtin.debug:
+        msg: "{{ shares }}"
+
+  #  - name: Create DFS folder
+  #    ansible.windows.win_shell: |
+  #      Import-Module Dfsn
+  #      New-DfsnFolder -Path \\{{ dfs_domain_name }}\{{ dfs_namespace }}\{{ item }} -TargetPath \\{{ dfs_san_server }}\{{ dfs_namespace }}\{{ item }}
+  #    loop: "{{ shares[0].share_names.split(',') }}"
+  
+    - name: Add dfs folder target
+      ansible.windows.win_shell: |
+        Import-Module Dfsn
+        New-DfsnFolderTarget -Path \\{{ dfs_domain_name }}\{{ dfs_namespace}}\{{ item }} -TargetPath \\{{ dfs_san_server }}\{{ item }}
+      loop: "{{ shares }}"
