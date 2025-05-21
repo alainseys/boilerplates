@@ -1,0 +1,20 @@
+---
+- name: Revert snapshot of a VM
+  hosts: all
+  vars:
+  vars_files:
+    - vault.yml
+  tasks:
+# tasks file for tagging
+  - name: Assign tag to vm
+    community.vmware.vmware_tag_manager:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: false
+      object_name: "{{ passed_vm_name }}"
+      object_type: VirtualMachine
+      state: add
+      tag_names:
+        - "{{ passed_tag_category }}:{{ passed_tag_name }}"
+    delegate_to: localhost
