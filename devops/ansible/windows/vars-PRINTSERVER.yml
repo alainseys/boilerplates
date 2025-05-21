@@ -1,0 +1,17 @@
+printers:
+      - name: "CFMPRT100"
+        location: "Cloche"
+        driver: "Canon Generic Plus PCL6"
+        driver_path: "\\\\SERVER01\\PrinterDrivers\\CANON\\Canon Generic Plus\\GPlus_PCL6_Driver_V312_32_64_00\\x64\\Driver\\CNP60MA64.INF"
+        ip: "10.10.1.1"
+        port: "10.10.1.1"
+        shared: false
+  
+      - name: "CFMPRT102"
+        location: "Cloche"
+        driver: "Canon Generic Plus PCL6"
+        driver_path: "\\\\SERVER01\\PrinterDrivers\\CANON\\Canon Generic Plus\\GPlus_PCL6_Driver_V312_32_64_00\\x64\\Driver\\CNP60MA64.INF"
+        ip: "10.10.1.2"
+        port: "10.10.1.2"
+        shared: false
+

@@ -1,0 +1,88 @@
+- name: Ensure desired state for printers
+  hosts: PRINTSERVER
+  become: true
+  become_method: ansible.builtin.runas
+  become_user: 'VM\ansible'
+  vars_files:
+    - vars-PRINTSERVER.yml
+
+  gather_facts: true
+  tasks:
+    - name: Check if driver file exists
+      ansible.windows.win_stat:
+        path: "{{ item.driver_path }}"
+      loop: "{{ printers }}"
+      register: driver_status
+
+    - name: Add Drivers if not present on system
+      ansible.windows.win_shell: |
+        pnputil /a "{{ item.driver_path }}"
+        sleep 2
+        Add-PrinterDriver -Name "{{ item.driver }}"
+      loop: "{{ printers }}"
+      args:
+        executable: powershell
+
+    - name: Check if the printer port exists
+      ansible.windows.win_shell: |
+        $port = Get-PrinterPort -Name "{{ item.port }}" -ErrorAction SilentlyContinue
+        if ($port) { Write-Host "Port exists" } else { Write-Host "Port does not exist" }
+      register: port_exists
+      loop: "{{ printers }}"
+      args:
+        executable: powershell
+
+    - name: Add Printer Port if not present
+      ansible.windows.win_shell: |
+        Add-PrinterPort -Name "{{ item.item.port }}" -PrinterHostAddress "{{ item.item.ip }}"
+      when: "'Port does not exist' in item.stdout"
+      loop: "{{ port_exists.results }}"
+      loop_control:
+        label: "{{ item.item.name }}"
+      args:
+        executable: powershell
+
+    - name: Check if the printer exists
+      ansible.windows.win_shell: |
+        $printer = Get-Printer -Name "{{ item.name }}" -ErrorAction SilentlyContinue
+        if ($printer) { Write-Host "Printer exists" } else { Write-Host "Printer does not exist" }
+      register: printer_exists
+      loop: "{{ printers }}"
+      args:
+        executable: powershell
+
+    - name: Add Printer if not exists
+      ansible.windows.win_shell: |
+        Add-Printer -Name "{{ item.item.name }}" -DriverName "{{ item.item.driver }}" -PortName "{{ item.item.port }}" -Shared -Location "{{ item.item.location }}" -Comment "Printer added by using ansible"
+      when: "'Printer does not exist' in item.stdout"
+      loop: "{{ printer_exists.results }}"
+      loop_control:
+        label: "{{ item.item.name }}"
+      args:
+        executable: powershell
+
+    - name: Ensure printer settings are correct (driver, shared status, and port)
+      ansible.windows.win_shell: |
+        $printer = Get-Printer -Name "{{ item.item.name }}"
+        $port = Get-PrinterPort -Name "{{ item.item.port }}"
+
+        # Check and update the printer if the settings do not match
+        if ($printer.DriverName -ne "{{ item.item.driver }}" -or $printer.Shared -ne $true -or $port.PrinterHostAddress -ne "{{ item.item.ip }}" -or $port.PrinterPort -ne "{{ item.item.port }}" -or $printer.Location -ne "{{ item.item.location }}") {
+          # Remove the old port if necessary
+          Remove-PrinterPort -Name "{{ item.item.port }}" -ErrorAction SilentlyContinue
+
+          # Add the new port with the correct IP
+          Add-PrinterPort -Name "{{ item.item.port }}" -PrinterHostAddress "{{ item.item.ip }}"
+
+          # Remove the old printer if necessary
+          Remove-Printer -Name "{{ item.item.name }}" -ErrorAction SilentlyContinue
+
+          # Add the printer with the correct driver and port
+          Add-Printer -Name "{{ item.item.name }}" -DriverName "{{ item.item.driver }}" -PortName "{{ item.item.port }}" -Shared -Location "{{ item.item.location }}" -Comment "Printer re-added using ansible"
+        }
+      when: "'Printer exists' in item.stdout"
+      loop: "{{ printer_exists.results }}"
+      loop_control:
+        label: "{{ item.item.name }}"
+      args:
+        executable: powershell
