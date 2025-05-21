@@ -1,0 +1,9 @@
+- name: Create custom eventlog
+  hosts: all
+  tasks:
+    - name: Create custom view for ansible
+      community.windows.win_eventlog:
+        name: Ansible
+        sources:
+          - Ansible
+        state: present
