@@ -1,4 +1,8 @@
 FROM python:3.11-buster
+
+# Set the workspace enviroment variable Worspace
+ENV WORKSPACE_BASE_PATH=/workspaces/PODMANTEST
+
 # Install sshpass
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sshpass
@@ -12,21 +16,21 @@ RUN python3 -m pip install ansible ansible-lint ansible-dev-tools ansible-builde
 
 
 # Set up bash aliases and environment variables
-RUN echo "alias ansible-update='git push origin HEAD:main'" >> /etc/bash.bashrc
-RUN echo "alias apply-template=/workspaces/demo/scripts/copy-template.sh" >> /etc/bash.bashrc
-RUN echo "export ANSIBLE_CONFIG=/workspaces/demo/ansible.cfg" >> /etc/bash.bashrc
+#RUN echo "alias ansible-update='git push origin HEAD:main'" >> /etc/bash.bashrc
+#RUN echo "alias apply-template=${WORKSPACE_BASE_PATH}/scripts/copy-template.sh" >> /etc/bash.bashrc
+#RUN echo "export ANSIBLE_CONFIG=${WORKSPACE_BASE_PATH}/ansible.cfg" >> /etc/bash.bashrc
+#RUN echo "alias ansible-submodules='${WORKSPACE_BASE_PATH}/scripts/ansible-submodules.sh'" >> /etc/bash.bashrc
 
 # Copy the private key into the image
-COPY ../private_key /workspaces/demo/private_key
+COPY ../private_key ${WORKSPACE_BASE_PATH}/private_key
 
 # Set permissions for the private key
-RUN chmod 600 /workspaces/demo/private_key
+RUN chmod 600 ${WORKSPACE_BASE_PATH}/private_key
 
 # Combine the commands to set up ssh-agent and add the key
 RUN echo "eval \$(ssh-agent -s)" >> /etc/bash.bashrc && \
-    echo "ssh-add /workspaces/demo/private_key" >> /etc/bash.bashrc
+    echo "ssh-add ${WORKSPACE_BASE_PATH}/private_key" >> /etc/bash.bashrc
 
-RUN echo "alias ansible-submodules='/workspaces/demo/scripts/ansible-submodules.sh'" >> /etc/bash.bashrc
 
 # Docker specs to use with molecule
 RUN apt-get update && \
@@ -50,4 +54,4 @@ COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 # Change Back to correct workdir
-WORKDIR /ansible
+WORKDIR /PODMANTEST
