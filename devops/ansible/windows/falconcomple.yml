@@ -1,0 +1,33 @@
+- name: Crowdstrike deployment
+  hosts: HOST-01
+  gather_facts: false
+  vars:
+    crowdstrike_psfile: "https://github.com/CrowdStrike/falcon-scripts/releases/download/v1.8.0/falcon_windows_install.ps1"
+    download_location: C:\temp\crowdstrike
+    falcon_clientid: YOUR_CLIENT_ID_HERE
+    falcon_clientsecret: YOUR_CLIENT_SECRET_HERE
+  tasks:
+    - name: Esure the C:\temp\crowdstrike\ folder exists
+      ansible.windows.win_file:
+        path: "{{ download_location }}"
+        state: directory
+      become: true
+
+    - name: Donwload crowdstrike powershell file
+      ansible.windows.win_powershell:
+        script: |
+          Invoke-WebRequest -Uri {{ crowdstrike_psfile }}  -OutFile {{ download_location }}\Crowdstrike.ps1
+        parameters:
+          Path: "{{ download_location }}"
+          Force: true
+      register: download_results
+
+    - name: Check if donwload is success
+      fail:
+        msg: "Failed to download script"
+      when: download_results is failed
+
+    - name: Install the script
+      ansible.windows.win_powershell:
+        script: "C:\\temp\\crowdstrike\\Crowdstrike.ps1 -FalconClientId {{ falcon_clientid }} -FalconClientSecret {{ falcon_clientsecret }}"
+      when: download_results is succeeded
