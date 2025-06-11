@@ -7,5 +7,6 @@ This folder contains a list of usefull windows playbooks to use with ansible
 - [DFS](dfs.yml)
 - [Eventlog](eventlog.yml)
 - [Crowdstrike - Falconcomple installation](falconcomple.yml)
+- [Rapid7 Uninstallation]()
 - [Install SSL on iis](iis-ssl.yaml)
 - [Reboot](reboot.yml)
