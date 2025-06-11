@@ -1,0 +1,48 @@
+- name: Rapid7 Uninstall Procedure
+  hosts: HOST-01
+  gather_facts: true
+  vars:
+  tasks:
+
+    - name: Uninstall Rapid7 Insights agent from register
+      ansible.windows.win_powershell:
+        script: $uninstallString = Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | Where-Object { $_.DisplayName -like "*Rapid7 Insight Agent*" } | Select-Object -ExpandProperty UninstallString
+      become: true
+
+    - name: Copy the script from files/R7Uninstall.ps1
+      ansible.builtin.copy:
+        src: files/R7Uninstall.ps1
+        dest: C:\\temp\\R7Uninstall.ps1
+        mode: "777"
+        owner: "VM\\ansible"
+      become: true
+
+    - name: Execute the R7Uninstall.ps1 script
+      ansible.windows.win_powershell:
+        script: C:\\temp\\R7Uninstall.ps1
+
+    - name: Remove the folder Rapid7 from LocalSystem(logs)
+      ansible.windows.win_file:
+        path: "C:\\Program Files\\Rapid7"
+        state: absent
+      become: true
+
+    - name: Remove the script from System
+      ansible.windows.win_file:
+        path: "C:\\temp\\R7Uninstall.ps1"
+        state: absent
+      become: true
+
+    - name: Schedule a reboot using a Scheduled Task
+      community.windows.win_scheduled_task:
+        name: Reboot_After_R7_Uninstall
+        username: SYSTEM
+        actions:
+          - path: Powershell.exe
+            arguments: |
+              Restart-Computer
+        triggers:
+          - type: time
+            start_boundary: '{{ ansible_date_time.date }}T21:00:00'
+        state: present
+        enabled: true
