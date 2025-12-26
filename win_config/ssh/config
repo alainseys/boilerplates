@@ -1,0 +1,5 @@
+Host github.com
+    Hostname github.com
+    User git
+    IdentityFile "C:\Users\username\.ssh\alainseys_HP_HCD4097VMK_private_openssh"
+    PreferredAuthentications publickey
