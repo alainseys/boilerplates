@@ -1,0 +1,11 @@
+# Converge.yml
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Execute main.yml
+      ansible.builtin.import_role:
+        name: seysconsults.testrole

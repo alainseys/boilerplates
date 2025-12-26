@@ -1,0 +1,16 @@
+---
+# Purpose: assert that the instance really ended up in the expected state.
+# Molecule calls this playbook with `molecule verify`.
+- name: Verify
+  hosts: instance
+  gather_facts: false # Quicker, if you do not need facts
+  tasks:
+    - name: Assert something
+      ansible.builtin.assert:
+        that: true
+
+    - name: Check if apache2 is running
+      ansible.builtin.service:
+        name: apache2
+        state: running
+      when: ansible_os_family == "Debian"

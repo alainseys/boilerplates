@@ -1,0 +1,37 @@
+all:
+  children:
+    linux:
+      vars:
+        ansible_user: ansible
+        ansible_port: 22
+        become: true
+        become_method: sudo
+        ansible_ssh_private_key_file: "/workspaces/ansible/private_key"
+        ansible_ssh_user: ansible
+        ansible_ssh_pass: PASSWORD_HERE
+        ansible_become_password: PASSWORD_HERE
+
+      hosts:
+        PACKETFENCE-01:
+          ansible_host: 172.27.247.39
+
+    packetfence_servers:
+      hosts:
+        PACKETFENCE-01: {}
+
+    # Uncomment this section when you have Windows hosts ready
+    # windows:
+    #   vars:
+    #     ansible_user: VM\ansible
+    #     ansible_password: PASSWORD_HERE
+    #     ansible_connection: winrm
+    #     ansible_winrm_transport: ntlm
+    #     ansible_port: 5986
+    #     ansible_winrm_scheme: https
+    #     ansible_winrm_server_cert_validation: ignore
+    #     become: true
+    #     become_method: runas
+    #     become_user: VM\ansible
+    #   hosts:
+    #     APP-SIGMACONSO-01:
+    #       ansible_host: 172.27.246.81
